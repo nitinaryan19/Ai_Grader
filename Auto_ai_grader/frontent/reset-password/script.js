@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = 'https://ai-grader-backend-02cv.onrender.com/api';
 
 // Read the token from the URL, e.g. reset-password/index.html?token=abc123
 const urlParams = new URLSearchParams(window.location.search);

@@ -56,7 +56,7 @@ You should see: `AI Grader backend running on http://localhost:5000`
 
 ### 6. Test it works
 ```bash
-curl http://localhost:5000/api/health
+curl https://ai-grader-backend-02cv.onrender.com/api/health
 ```
 Should return `{"status":"ok","message":"AI Grader backend is running"}`
 
@@ -64,14 +64,14 @@ Should return `{"status":"ok","message":"AI Grader backend is running"}`
 
 **Register a teacher:**
 ```bash
-curl -X POST http://localhost:5000/api/auth/register \
+curl -X POST https://ai-grader-backend-02cv.onrender.com/api/auth/register \
   -H "Content-Type: application/json" \
   -d '{"email":"teacher@example.com","password":"password123","role":"TEACHER","name":"Jane Doe"}'
 ```
 
 **Log in:**
 ```bash
-curl -X POST http://localhost:5000/api/auth/login \
+curl -X POST https://ai-grader-backend-02cv.onrender.com/api/auth/login \
   -H "Content-Type: application/json" \
   -c cookies.txt \
   -d '{"email":"teacher@example.com","password":"password123","role":"TEACHER","rememberMe":true}'
@@ -79,7 +79,7 @@ curl -X POST http://localhost:5000/api/auth/login \
 
 **Get current logged-in user (using the saved cookie):**
 ```bash
-curl http://localhost:5000/api/auth/me -b cookies.txt
+curl https://ai-grader-backend-02cv.onrender.com/api/auth/me -b cookies.txt
 ```
 
 ## Connecting your frontend
@@ -88,7 +88,7 @@ From your login page's JavaScript, call the API like this:
 
 ```javascript
 async function handleLogin(email, password, role, rememberMe) {
-  const res = await fetch('http://localhost:5000/api/auth/login', {
+  const res = await fetch('https://ai-grader-backend-02cv.onrender.com/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include', // IMPORTANT: sends/receives the auth cookie
@@ -104,20 +104,20 @@ async function handleLogin(email, password, role, rememberMe) {
 ```
 
 For the "Continue with Google" / "Continue with Microsoft" buttons, simply link/redirect them to:
-- `http://localhost:5000/api/auth/google`
-- `http://localhost:5000/api/auth/microsoft`
+- `https://ai-grader-backend-02cv.onrender.com/api/auth/google`
+- `https://ai-grader-backend-02cv.onrender.com/api/auth/microsoft`
 
 ## Setting up Google/Microsoft OAuth (optional, do this later)
 
 **Google:**
 1. Go to https://console.cloud.google.com/apis/credentials
 2. Create OAuth Client ID → Web application
-3. Add authorized redirect URI: `http://localhost:5000/api/auth/google/callback`
+3. Add authorized redirect URI: `https://ai-grader-backend-02cv.onrender.com/api/auth/google/callback`
 4. Copy the Client ID/Secret into your `.env`
 
 **Microsoft:**
 1. Go to https://portal.azure.com → App registrations → New registration
-2. Add redirect URI: `http://localhost:5000/api/auth/microsoft/callback`
+2. Add redirect URI: `https://ai-grader-backend-02cv.onrender.com/api/auth/microsoft/callback`
 3. Create a client secret under "Certificates & secrets"
 4. Copy the Application (client) ID and secret into your `.env`
 

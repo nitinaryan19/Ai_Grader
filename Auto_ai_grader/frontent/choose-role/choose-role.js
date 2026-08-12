@@ -27,7 +27,7 @@ if (!tempToken) {
 document.getElementById("continueBtn").onclick = async () => {
 
     const res = await fetch(
-        "http://localhost:5000/api/auth/oauth/register",
+        "https://ai-grader-backend-02cv.onrender.com/api/auth/oauth/register",
         {
             method: "POST",
 

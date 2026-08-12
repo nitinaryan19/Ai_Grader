@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = 'https://ai-grader-backend-02cv.onrender.com/api';
 
 // ---------- Avatar helper ----------
 // Uses a locally-saved custom photo (per user, stored in this browser) if one
