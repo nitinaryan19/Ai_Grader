@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Grader — Student Portal</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🤖</div>
+      <div class="brand-text">
+        <span class="brand-name">AI Grader</span>
+        <span class="brand-sub">Student Portal</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="#" class="nav-item active" data-page="Dashboard">
+        <span class="nav-icon">🏠</span> Dashboard
+      </a>
+      <a href="#" class="nav-item" data-page="My Exams">
+        <span class="nav-icon">📝</span> My Exams
+      </a>
+      <a href="#" class="nav-item" data-page="My Results">
+        <span class="nav-icon">📄</span> My Results
+      </a>
+      <a href="#" class="nav-item" data-page="Materials">
+        <span class="nav-icon">📚</span> Materials
+      </a>
+      <a href="#" class="nav-item" data-page="AI Feedback">
+        <span class="nav-icon">💬</span> AI Feedback
+      </a>
+      <a href="#" class="nav-item" data-page="Performance">
+        <span class="nav-icon">📊</span> Performance
+      </a>
+      <a href="#" class="nav-item" data-page="Notifications">
+        <span class="nav-icon">🔔</span> Notifications
+        <span class="nav-badge" id="notifCount">2</span>
+      </a>
+      <a href="#" class="nav-item" data-page="Profile">
+        <span class="nav-icon">👤</span> Profile
+      </a>
+      <a href="#" class="nav-item logout-item" data-page="Logout">
+        <span class="nav-icon">🚪</span> Logout
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+
+    <div class="welcome welcome-with-avatar">
+      <img class="welcome-avatar" id="profileAvatar" src="https://ui-avatars.com/api/?name=Student&background=6a5cf5&color=fff&bold=true&size=128" alt="Profile">
+      <div>
+        <h2>Welcome, <span id="userName">Student</span> 👋</h2>
+        <p>Keep learning, keep growing.</p>
+      </div>
+    </div>
+
+    <!-- Stat cards -->
+    <section class="stats">
+      <div class="stat-card">
+        <div class="stat-icon icon-purple">📅</div>
+        <div class="stat-info">
+          <span class="stat-value" id="statUpcomingExams">-</span>
+          <span class="stat-label">Upcoming Exams</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-blue">🔄</div>
+        <div class="stat-info">
+          <span class="stat-value" id="statCompletedExams">-</span>
+          <span class="stat-label">Exams Completed</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-green">✅</div>
+        <div class="stat-info">
+          <span class="stat-value" id="statAverageScore">-</span>
+          <span class="stat-label">Average Score</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon icon-purple2">🏅</div>
+        <div class="stat-info">
+          <span class="stat-value" id="statLastScore">-</span>
+          <span class="stat-label">Last Score</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Two column panels -->
+    <section class="columns">
+
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Upcoming Exams</h3>
+          <a href="#" class="view-all">View All</a>
+        </div>
+
+        <ul class="exam-list" id="upcomingExams">
+          <li style="color:var(--text-muted);font-size:13px;padding:12px 0;">Loading...</li>
+        </ul>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h3>Recent Results</h3>
+          <a href="#" class="view-all">View All</a>
+        </div>
+
+        <ul class="result-list" id="recentResults">
+          <li style="color:var(--text-muted);font-size:13px;padding:12px 0;">Loading...</li>
+        </ul>
+      </div>
+
+    </section>
+
+    <!-- AI Tip -->
+    <section class="ai-tip">
+      <div class="ai-tip-text">
+        <h4>AI Tip for You</h4>
+        <p>Review your weak concepts regularly and practice past questions.</p>
+      </div>
+      <div class="ai-tip-icon">🏆</div>
+    </section>
+
+  </div>
+</div>
+<!-- Exam Result Modal (opened when returning from an exam, or from Recent Results / My Results) -->
+<div class="modal-overlay" id="examResultModal">
+  <div class="modal-box" style="max-width:600px;">
+    <div class="modal-header">
+      <h3>Your Result</h3>
+      <button class="modal-close" id="closeExamResultModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="examResultSummary" style="text-align:center;margin-bottom:18px;">
+        <div style="font-size:32px;font-weight:800;color:var(--purple);" id="resultTotalScore">-</div>
+        <div style="font-size:13px;color:var(--text-muted);">Total Score</div>
+      </div>
+      <div id="examResultBreakdown"></div>
+      <button class="modal-btn-primary" id="closeResultBtn" style="margin-top:16px;">Back to Dashboard</button>
+    </div>
+  </div>
+</div>
+<!-- Notifications Modal -->
+<div class="modal-overlay" id="notificationsModal">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="modal-header">
+      <h3>Notifications</h3>
+      <button class="modal-close" id="closeNotificationsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="notificationsList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- My Results (history) Modal -->
+<div class="modal-overlay" id="myResultsModal">
+  <div class="modal-box" style="max-width:600px;">
+    <div class="modal-header">
+      <h3>My Results</h3>
+      <button class="modal-close" id="closeMyResultsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="myResultsList"></div>
+    </div>
+  </div>
+</div>
+<!-- Settings / Profile Modal -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Settings</h3>
+      <button class="modal-close" id="closeSettingsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <h4 style="font-size:13.5px;font-weight:700;margin-bottom:12px;">Profile</h4>
+
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+        <img id="settingsAvatarPreview" src="https://ui-avatars.com/api/?name=Student&background=6a5cf5&color=fff&bold=true&size=128" style="width:56px;height:56px;border-radius:50%;object-fit:cover;">
+        <div>
+          <input type="file" id="settingsAvatarInput" accept="image/*" style="font-size:12.5px;">
+          <p style="font-size:11.5px;color:var(--text-muted);margin-top:4px;">Upload a profile picture (JPG/PNG)</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="settingsNameInput" placeholder="Your name">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="text" id="settingsEmailInput" disabled style="background:var(--bg);color:var(--text-muted);">
+      </div>
+      <p id="profileError" style="color:#e11d48;font-size:13px;display:none;"></p>
+      <p id="profileSuccess" style="color:#16a34a;font-size:13px;display:none;"></p>
+      <button class="modal-btn-primary" id="saveProfileBtn">Save Profile</button>
+
+      <hr style="border:none;border-top:1px solid var(--border);margin:22px 0;">
+
+      <h4 style="font-size:13.5px;font-weight:700;margin-bottom:12px;">Change Password</h4>
+      <div class="field">
+        <label>Current Password</label>
+        <input type="password" id="currentPasswordInput" placeholder="Enter current password">
+      </div>
+      <div class="field">
+        <label>New Password</label>
+        <input type="password" id="newPasswordInput" placeholder="Enter new password (min. 6 characters)">
+      </div>
+      <p id="passwordError" style="color:#e11d48;font-size:13px;display:none;"></p>
+      <p id="passwordSuccess" style="color:#16a34a;font-size:13px;display:none;"></p>
+      <button class="modal-btn-secondary" id="changePasswordBtn">Change Password</button>
+    </div>
+  </div>
+</div>
+<!-- AI Feedback Modal -->
+<div class="modal-overlay" id="aiFeedbackModal">
+  <div class="modal-box" style="max-width:600px;">
+    <div class="modal-header">
+      <h3>AI Feedback</h3>
+      <button class="modal-close" id="closeAiFeedbackModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="aiFeedbackList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Performance Modal -->
+<div class="modal-overlay" id="performanceModal">
+  <div class="modal-box" style="max-width:600px;">
+    <div class="modal-header">
+      <h3>Performance</h3>
+      <button class="modal-close" id="closePerformanceModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="performanceSummary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;"></div>
+      <canvas id="performanceChart" height="220"></canvas>
+      <div id="performanceEmptyState" style="display:none;text-align:center;color:var(--text-muted);font-size:13px;padding:24px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Materials: pick an exam -->
+<div class="modal-overlay" id="materialsExamPickerModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Select an Exam</h3>
+      <button class="modal-close" id="closeMaterialsExamPickerModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="materialsExamPickerList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Materials: list for one exam -->
+<div class="modal-overlay" id="materialsListModal">
+  <div class="modal-box" style="max-width:560px;">
+    <div class="modal-header">
+      <h3 id="materialsListTitle">Materials</h3>
+      <button class="modal-close" id="closeMaterialsListModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="materialsListContent"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

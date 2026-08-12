@@ -1,0 +1,97 @@
+// This file defines your database structure.
+// PostgreSQL (hosted on Render) - a real persistent database for production,
+// unlike SQLite's local file which doesn't survive on most free hosts.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  password      String?  // nullable because OAuth users have no password
+  name          String?
+  role          String   // "TEACHER" or "STUDENT" - validated in the controller, not the DB
+  provider      String   @default("local") // "local", "google", or "microsoft"
+  providerId    String?  // the ID given by Google/Microsoft, if applicable
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  resetTokenHash   String?   // hashed version of the reset token (never store the raw token)
+  resetTokenExpiry DateTime? // token is only valid for a limited time
+  examsCreated  Exam[]       @relation("TeacherExams")
+  submissions   Submission[]
+  notifications Notification[]
+}
+
+model Exam {
+  id          String       @id @default(uuid())
+  title       String
+  subject     String
+  duration    Int          // exam duration in minutes
+  teacherId   String
+  teacher     User         @relation("TeacherExams", fields: [teacherId], references: [id])
+  questions   Question[]
+  submissions Submission[]
+  materials   Material[]
+  createdAt   DateTime     @default(now())
+}
+
+model Question {
+  id           String   @id @default(uuid())
+  examId       String
+  exam         Exam     @relation(fields: [examId], references: [id])
+  questionText String
+  modelAnswer  String   // the ideal/correct answer the AI compares student answers against
+  maxMarks     Int      @default(10)
+  createdAt    DateTime @default(now()) // used to detect "new" questions added after a student's first submission
+  answers      Answer[]
+}
+
+model Submission {
+  id          String   @id @default(uuid())
+  examId      String
+  exam        Exam     @relation(fields: [examId], references: [id])
+  studentId   String
+  student     User     @relation(fields: [studentId], references: [id])
+  submittedAt DateTime @default(now())
+  totalScore  Float?   // filled in once all answers are graded
+  graded      Boolean  @default(false)
+  answers     Answer[]
+}
+
+model Answer {
+  id             String     @id @default(uuid())
+  submissionId   String
+  submission     Submission @relation(fields: [submissionId], references: [id])
+  questionId     String
+  question       Question   @relation(fields: [questionId], references: [id])
+  studentAnswer  String
+  answerType     String     @default("text") // "text" (typed) or "file" (image/PDF/docx/txt upload, extracted before grading)
+  score          Float?     // AI-assigned score for this answer
+  feedback       String?    // AI-generated feedback text
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  message   String
+  examId    String?  // optional - which exam this notification relates to
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model Material {
+  id         String   @id @default(uuid())
+  examId     String
+  exam       Exam     @relation(fields: [examId], references: [id])
+  filename   String   // original uploaded filename, shown to students
+  storedName String   // name actually used on disk (unique, to avoid collisions)
+  url        String   // full URL students/teachers use to open/download it
+  uploadedAt DateTime @default(now())
+}

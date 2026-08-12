@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Grader — Taking Exam</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="take_exam.css">
+</head>
+<body class="exam-page-body">
+
+<div class="exam-page">
+
+  <!-- Sticky header: title + timer + exit -->
+  <header class="exam-page-header">
+    <div class="exam-page-header-left">
+      <h1 id="examTitle">Loading exam...</h1>
+      <p id="examSubtitle" class="exam-page-subtitle"></p>
+    </div>
+    <div class="exam-page-header-right">
+      <span id="examTimer" class="exam-page-timer">⏱ --:--</span>
+      <button id="exitExamBtn" class="exam-page-exit">Exit</button>
+    </div>
+  </header>
+
+  <!-- Anti-cheat notice -->
+  <div class="exam-integrity-notice">
+    🔒 Copy &amp; paste is disabled during this exam. Type your own answer, or switch a question to
+    <strong>Upload File</strong> if you'd rather submit a photo, PDF, Word (.docx), or text file instead.
+  </div>
+
+  <!-- Questions -->
+  <main id="examQuestionsWrap" class="exam-questions-wrap">
+    <p class="exam-loading">Loading questions...</p>
+  </main>
+
+  <!-- Submit bar -->
+  <div class="exam-submit-bar">
+    <p id="examSubmitError" class="exam-submit-error" style="display:none;"></p>
+    <button id="submitExamBtn" class="modal-btn-primary exam-submit-btn">Submit Exam →</button>
+  </div>
+
+  <!-- Result screen (shown after submit, replaces the questions) -->
+  <div id="examResultScreen" class="exam-result-screen" style="display:none;">
+    <div class="exam-result-score">
+      <div class="exam-result-score-value" id="resultTotalScore">-</div>
+      <div class="exam-result-score-label">Total Score</div>
+    </div>
+    <div id="examResultBreakdown"></div>
+    <button id="backToDashboardBtn" class="modal-btn-primary" style="margin-top:18px;">Back to Dashboard</button>
+  </div>
+
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script src="take_exam.js"></script>
+</body>
+</html>

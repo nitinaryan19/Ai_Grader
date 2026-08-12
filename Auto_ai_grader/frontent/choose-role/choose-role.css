@@ -1,0 +1,76 @@
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:Segoe UI;
+    background:#eef2ff;
+}
+
+.container{
+
+    background:white;
+
+    width:420px;
+
+    padding:40px;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.15);
+
+    text-align:center;
+}
+
+.roles{
+
+    display:flex;
+
+    gap:20px;
+
+    margin:30px 0;
+}
+
+.role{
+
+    flex:1;
+
+    padding:18px;
+
+    border:2px solid #ddd;
+
+    border-radius:12px;
+
+    background:white;
+
+    cursor:pointer;
+
+    font-size:17px;
+}
+
+.role.active{
+
+    border-color:#6c5ce7;
+
+    background:#ede9fe;
+}
+
+#continueBtn{
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    background:#6c5ce7;
+
+    color:white;
+
+    border-radius:10px;
+
+    font-size:17px;
+
+    cursor:pointer;
+}

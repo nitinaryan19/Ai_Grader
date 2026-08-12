@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Grader — Dashboard</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon">🤖</div>
+      <span class="brand-name">AI Grader</span>
+    </div>
+
+    <nav class="nav">
+      <a href="#" class="nav-item active" data-page="Dashboard">
+        <span class="nav-icon">🏠</span> Dashboard
+      </a>
+      <a href="#" class="nav-item" data-page="Exams">
+        <span class="nav-icon">📝</span> Exams
+      </a>
+      <a href="#" class="nav-item" data-page="Questions">
+        <span class="nav-icon">❓</span> Questions
+      </a>
+      <a href="#" class="nav-item" data-page="Students">
+        <span class="nav-icon">👥</span> Students
+      </a>
+      <a href="#" class="nav-item" data-page="Submissions">
+        <span class="nav-icon">📄</span> Submissions
+      </a>
+      <a href="#" class="nav-item" data-page="Evaluation">
+        <span class="nav-icon">✅</span> Evaluation
+      </a>
+      <a href="#" class="nav-item" data-page="Rubrics">
+        <span class="nav-icon">📋</span> Rubrics
+      </a>
+      <a href="#" class="nav-item" data-page="Analytics">
+        <span class="nav-icon">📊</span> Analytics
+      </a>
+      <a href="#" class="nav-item" data-page="Reports">
+        <span class="nav-icon">🗂️</span> Reports
+      </a>
+      <a href="#" class="nav-item" data-page="Settings">
+  <span class="nav-icon">⚙️</span> Settings
+</a>
+<a href="#" class="nav-item logout-item" data-page="Logout">
+  <span class="nav-icon">🚪</span> Logout
+</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn" id="menuToggle" aria-label="Toggle sidebar">☰</button>
+        <h1 id="pageTitle">Dashboard</h1>
+      </div>
+
+      <div class="topbar-right">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search anything...">
+        </div>
+
+        <button class="icon-btn bell-btn" id="bellBtn" aria-label="Notifications">
+          🔔
+          <span class="badge" id="notifBadge">1</span>
+        </button>
+
+        <div class="profile" id="profileBtn">
+          <img class="avatar" id="profileAvatar" src="https://i.pravatar.cc/40?img=47" alt="Profile">
+          <div class="profile-info">
+            <span class="profile-name" id="profileName">Teacher</span>
+            <span class="profile-role">Teacher ▾</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+
+      <div class="welcome">
+        <h2>Welcome back, <span id="userName">Teacher</span> 👋</h2>
+        <p>Here's what's happening with your exams today.</p>
+      </div>
+
+      <!-- Stat cards -->
+      <section class="stats">
+        <div class="stat-card">
+          <div class="stat-icon icon-purple">🎓</div>
+          <div class="stat-info">
+            <span class="stat-value" id="statTotalExams">-</span>
+            <span class="stat-label">Total Exams</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon icon-blue">👥</div>
+          <div class="stat-info">
+            <span class="stat-value" id="statTotalStudents">-</span>
+            <span class="stat-label">Total Students</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon icon-green">📊</div>
+          <div class="stat-info">
+            <span class="stat-value" id="statTotalSubmissions">-</span>
+            <span class="stat-label">Submissions</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon icon-orange">⏱️</div>
+          <div class="stat-info">
+            <span class="stat-value" id="statAvgScore">-</span>
+            <span class="stat-label">Average Score</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Recent Exams -->
+      <section class="panel">
+        <div class="panel-header">
+          <h3>Recent Exams</h3>
+          <a href="#" class="view-all">View All</a>
+        </div>
+
+        <div class="table-wrap">
+          <table id="examsTable">
+            <thead>
+              <tr>
+                <th>Exam Title</th>
+                <th>Subject</th>
+                <th>Questions</th>
+                <th>Submissions</th>
+                <th>Evaluated</th>
+                <th>Avg. Score</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td colspan="7" style="text-align:center;color:var(--text-muted);padding:24px;">Loading exams...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Quick Actions -->
+      <section class="panel">
+        <h3 class="quick-title">Quick Actions</h3>
+        <div class="quick-actions">
+          <button class="quick-card" data-action="Create Exam">
+            <span class="quick-icon qi-purple">🎓</span>
+            <span class="quick-text">
+              <strong>Create Exam</strong>
+              <small>Create a new exam</small>
+            </span>
+          </button>
+
+          <button class="quick-card" data-action="Upload Questions">
+            <span class="quick-icon qi-blue">⬆️</span>
+            <span class="quick-text">
+              <strong>Upload Questions</strong>
+              <small>Add questions in bulk</small>
+            </span>
+          </button>
+
+          <button class="quick-card" data-action="Upload Answer Key">
+            <span class="quick-icon qi-green">📄</span>
+            <span class="quick-text">
+              <strong>Upload Answer Key</strong>
+              <small>Add model answers</small>
+            </span>
+          </button>
+
+          <button class="quick-card" data-action="Upload Materials">
+            <span class="quick-icon qi-violet">📑</span>
+            <span class="quick-text">
+              <strong>Upload Materials</strong>
+              <small>Upload notes / PDFs</small>
+            </span>
+          </button>
+
+          <button class="quick-card" data-action="View Submissions">
+            <span class="quick-icon qi-orange">📋</span>
+            <span class="quick-text">
+              <strong>View Submissions</strong>
+              <small>Check student attempts</small>
+            </span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Create Exam Modal -->
+<div class="modal-overlay" id="createExamModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Create New Exam</h3>
+      <button class="modal-close" id="closeCreateExamModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Exam Title</label>
+        <input type="text" id="examTitleInput" placeholder="e.g. Data Structures - Unit 3">
+      </div>
+      <div class="field">
+        <label>Subject</label>
+        <input type="text" id="examSubjectInput" placeholder="e.g. Computer Science">
+      </div>
+      <div class="field">
+        <label>Duration (minutes)</label>
+        <input type="number" id="examDurationInput" placeholder="e.g. 60" min="1">
+      </div>
+      <p id="createExamError" style="color:#e11d48;font-size:13px;display:none;"></p>
+      <button class="modal-btn-primary" id="submitCreateExam">Create Exam →</button>
+    </div>
+  </div>
+</div>
+<!-- Reports Modal -->
+<div class="modal-overlay" id="reportsModal">
+  <div class="modal-box" style="max-width:700px;">
+    <div class="modal-header">
+      <h3>Student Reports</h3>
+      <button class="modal-close" id="closeReportsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <button class="modal-btn-secondary" id="downloadReportsCsvBtn" style="margin-bottom:16px;">⬇ Download as CSV</button>
+      <div id="reportsList"></div>
+    </div>
+  </div>
+</div>
+<!-- Add Questions Modal -->
+<div class="modal-overlay" id="addQuestionsModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Add Questions</h3>
+      <button class="modal-close" id="closeAddQuestionsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px;color:#8a8fa3;margin-bottom:14px;">Add as many questions as you like, then click Done.</p>
+
+      <div class="field">
+        <label>Question Text</label>
+        <textarea id="questionTextInput" rows="2" placeholder="e.g. What is a stack data structure?" style="width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid var(--border);font-size:14px;resize:vertical;font-family:inherit;"></textarea>
+      </div>
+      <div class="field">
+        <label>Model Answer (used by the AI to grade)</label>
+        <textarea id="modelAnswerInput" rows="3" placeholder="The ideal/correct answer" style="width:100%;padding:11px 14px;border-radius:10px;border:1.5px solid var(--border);font-size:14px;resize:vertical;font-family:inherit;"></textarea>
+      </div>
+      <div class="field">
+        <label>Max Marks</label>
+        <input type="number" id="maxMarksInput" value="10" min="1">
+      </div>
+      <p id="addQuestionError" style="color:#e11d48;font-size:13px;display:none;"></p>
+      <p id="addQuestionSuccess" style="color:#16a34a;font-size:13px;display:none;"></p>
+      <button class="modal-btn-secondary" id="submitAddQuestion">+ Add This Question</button>
+
+      <div id="questionsAddedList" style="margin-top:16px;display:flex;flex-direction:column;gap:8px;"></div>
+
+      <button class="modal-btn-primary" id="doneAddingQuestions" style="margin-top:18px;">Done — Back to Dashboard</button>
+    </div>
+  </div>
+</div>
+<!-- View Submissions Modal -->
+<div class="modal-overlay" id="viewSubmissionsModal">
+  <div class="modal-box" style="max-width:640px;">
+    <div class="modal-header">
+      <h3 id="submissionsExamTitle">Submissions</h3>
+      <button class="modal-close" id="closeViewSubmissionsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="submissionsList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Submission Detail Modal (one student's answers) -->
+<div class="modal-overlay" id="submissionDetailModal">
+  <div class="modal-box" style="max-width:600px;">
+    <div class="modal-header">
+      <h3 id="submissionDetailStudentName">Student Submission</h3>
+      <button class="modal-close" id="closeSubmissionDetailModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="text-align:center;margin-bottom:16px;">
+        <div style="font-size:28px;font-weight:800;color:var(--accent);" id="submissionDetailScore">-</div>
+        <div style="font-size:12.5px;color:var(--text-muted);">Total Score</div>
+      </div>
+      <div id="submissionDetailBreakdown"></div>
+    </div>
+  </div>
+</div>
+<!-- Students Modal -->
+<div class="modal-overlay" id="studentsModal">
+  <div class="modal-box" style="max-width:640px;">
+    <div class="modal-header">
+      <h3>Students</h3>
+      <button class="modal-close" id="closeStudentsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="studentsList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Analytics Modal -->
+<div class="modal-overlay" id="analyticsModal">
+  <div class="modal-box" style="max-width:640px;">
+    <div class="modal-header">
+      <h3>Analytics</h3>
+      <button class="modal-close" id="closeAnalyticsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="analyticsSummary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;"></div>
+      <canvas id="analyticsChart" height="220"></canvas>
+      <div id="analyticsEmptyState" style="display:none;text-align:center;color:var(--text-muted);font-size:13px;padding:24px;"></div>
+    </div>
+  </div>
+</div>
+<!-- Notifications Modal -->
+<div class="modal-overlay" id="notificationsModal">
+  <div class="modal-box" style="max-width:480px;">
+    <div class="modal-header">
+      <h3>Notifications</h3>
+      <button class="modal-close" id="closeNotificationsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="notificationsList"></div>
+    </div>
+  </div>
+</div>
+<!-- Exam Picker Modal (reused by Questions, Rubrics, Submissions, Upload Questions/Answer Key, Upload Materials) -->
+<div class="modal-overlay" id="examPickerModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="examPickerTitle">Select an Exam</h3>
+      <button class="modal-close" id="closeExamPickerModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="examPickerList"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Questions / Rubric Viewer Modal (read-only) -->
+<div class="modal-overlay" id="questionsViewModal">
+  <div class="modal-box" style="max-width:600px;">
+    <div class="modal-header">
+      <h3 id="questionsViewTitle">Questions</h3>
+      <button class="modal-close" id="closeQuestionsViewModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="questionsViewList"></div>
+    </div>
+  </div>
+</div>
+<!-- Settings / Profile Modal -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Settings</h3>
+      <button class="modal-close" id="closeSettingsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <h4 style="font-size:13.5px;font-weight:700;margin-bottom:12px;">Profile</h4>
+
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:18px;">
+        <img id="settingsAvatarPreview" src="https://i.pravatar.cc/40?img=47" style="width:56px;height:56px;border-radius:50%;object-fit:cover;">
+        <div>
+          <input type="file" id="settingsAvatarInput" accept="image/*" style="font-size:12.5px;">
+          <p style="font-size:11.5px;color:var(--text-muted);margin-top:4px;">Upload a profile picture (JPG/PNG)</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="settingsNameInput" placeholder="Your name">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="text" id="settingsEmailInput" disabled style="background:var(--bg);color:var(--text-muted);">
+      </div>
+      <p id="profileError" style="color:#e11d48;font-size:13px;display:none;"></p>
+      <p id="profileSuccess" style="color:#16a34a;font-size:13px;display:none;"></p>
+      <button class="modal-btn-primary" id="saveProfileBtn">Save Profile</button>
+
+      <hr style="border:none;border-top:1px solid var(--border);margin:22px 0;">
+
+      <h4 style="font-size:13.5px;font-weight:700;margin-bottom:12px;">Change Password</h4>
+      <div class="field">
+        <label>Current Password</label>
+        <input type="password" id="currentPasswordInput" placeholder="Enter current password">
+      </div>
+      <div class="field">
+        <label>New Password</label>
+        <input type="password" id="newPasswordInput" placeholder="Enter new password (min. 6 characters)">
+      </div>
+      <p id="passwordError" style="color:#e11d48;font-size:13px;display:none;"></p>
+      <p id="passwordSuccess" style="color:#16a34a;font-size:13px;display:none;"></p>
+      <button class="modal-btn-secondary" id="changePasswordBtn">Change Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reports Modal -->
+<div class="modal-overlay" id="reportsModal">
+  <div class="modal-box" style="max-width:680px;">
+    <div class="modal-header">
+      <h3>Reports</h3>
+      <button class="modal-close" id="closeReportsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="reportsList"></div>
+      <button class="modal-btn-primary" id="downloadReportBtn" style="margin-top:16px;">⬇️ Download CSV Report</button>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Materials Modal -->
+<div class="modal-overlay" id="materialsModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3 id="materialsModalTitle">Upload Materials</h3>
+      <button class="modal-close" id="closeMaterialsModal">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Select File (PDF / notes)</label>
+        <input type="file" id="materialFileInput" accept=".pdf,.doc,.docx,.txt">
+      </div>
+      <p id="materialsError" style="color:#e11d48;font-size:13px;display:none;"></p>
+      <p id="materialsSuccess" style="color:#16a34a;font-size:13px;display:none;"></p>
+      <button class="modal-btn-primary" id="submitMaterialUpload">Upload</button>
+      <div id="materialsUploadedList" style="margin-top:16px;display:flex;flex-direction:column;gap:8px;"></div>
+    </div>
+  </div>
+</div>
+
+    </main>
+  </div>
+</div>
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>

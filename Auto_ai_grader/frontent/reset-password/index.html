@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Grader — Reset Password</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="card">
+  <!-- LEFT PANEL -->
+  <div class="left">
+    <div class="brand">
+      <div class="brand-icon">🎓</div>
+      <div>
+        <h1>AI Grader</h1>
+        <p>Automatic Short Answer Grading</p>
+      </div>
+    </div>
+
+    <div class="hero">
+      <h2>Smart Evaluation.<span>Better Learning.</span></h2>
+      <div class="hero-rule"></div>
+      <p>AI-powered platform that helps teachers save time and provides students with detailed, meaningful feedback.</p>
+    </div>
+
+    <div class="robot-wrap">
+      <div class="plant">🪴</div>
+      <div class="robot">🤖</div>
+      <div class="books">📚</div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right">
+    <h2>Reset Password</h2>
+    <p class="sub">Enter your new password below</p>
+
+    <div class="field">
+      <label>New Password</label>
+      <div class="input-wrap">
+        <span class="icon">🔒</span>
+        <input type="password" id="newPasswordInput" placeholder="Enter new password (min. 6 characters)">
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Confirm New Password</label>
+      <div class="input-wrap">
+        <span class="icon">🔒</span>
+        <input type="password" id="confirmPasswordInput" placeholder="Re-enter new password">
+      </div>
+    </div>
+
+    <button class="btn-login" id="resetBtn">Reset Password →</button>
+    <p id="errorMsg" style="color:#e11d48;font-size:13.5px;text-align:center;margin:14px 0 0;display:none;"></p>
+    <p id="successMsg" style="color:#16a34a;font-size:13.5px;text-align:center;margin:14px 0 0;display:none;"></p>
+
+    <p class="signup"><a href="../login/index.html">Back to login</a></p>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
